@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
+
 export enum TodoStatus{
-    PENDING='PENDIN',
+    PENDING='PENDING',
     IN_PROGRESS='IN_PROGRESS',
     COMPLETE='COMPLETE'
 }

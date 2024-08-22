@@ -5,12 +5,15 @@ import { AuthUser } from './entities/auth_user.entity';
 import * as bcrypt from 'bcrypt'
 import { LoginDto } from './dto/login-auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
+import { JwtPayload } from './interfaces/jwt-payload.interfaces';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthUserService {
   constructor(
     @InjectModel(AuthUser.name)
-    private readonly AuthModel: Model<AuthUser>
+    private readonly AuthModel: Model<AuthUser>,
+    private readonly jwtService: JwtService,
   ) { }
 
   async create(createAuthUserDto: CreateAuthUserDto) {
@@ -42,12 +45,32 @@ export class AuthUserService {
    if(!bcrypt.compareSync(password, userAuth.password))throw new UnauthorizedException(`Crediantial are not valid ${password}`)  
 
    return{
-    userAuth
+    userAuth,
+    token: this.getJwtToken({email:userAuth.email})
    } 
 
   }
 
 
 
+
+
+
+  async newDefaul() {
+    const password="Welcome123!";
+    const crateTodo=await this.AuthModel.create({
+      email: "admin@abatechnology.com",
+      password:bcrypt.hashSync(password, 10),
+      fullname: "Admin"
+  
+    })
+    return {
+      crateTodo
+    }
+  }
+  private getJwtToken(payload: JwtPayload){
+    const token=this.jwtService.sign(payload)
+    return token
+  }
 
 }
