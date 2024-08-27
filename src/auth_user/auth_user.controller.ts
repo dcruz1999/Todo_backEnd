@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AuthUserService } from './auth_user.service';
 import { CreateAuthUserDto } from './dto/create-auth_user.dto';
 import { UpdateAuthUserDto } from './dto/update-auth_user.dto';
@@ -14,8 +22,12 @@ export class AuthUserController {
   }
 
   @Post('login')
-  loginUser(@Body() LoginDto: LoginDto){
-    return this.authUserService.login(LoginDto)
+  loginUser(@Body() LoginDto: LoginDto) {
+    return this.authUserService.login(LoginDto);
   }
 
+  @Post('default')
+  defaul() {
+    return this.authUserService.newDefaul();
+  }
 }
