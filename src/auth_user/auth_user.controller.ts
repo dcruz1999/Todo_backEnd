@@ -22,5 +22,5 @@ export class AuthUserController {
   defaul( ) {
     return this.authUserService.newDefaul();
   }
-
+  
 }
