@@ -1,8 +1,12 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateAuthUserDto } from './dto/create-auth_user.dto';
 import { Model } from 'mongoose';
 import { AuthUser } from './entities/auth_user.entity';
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login-auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtPayload } from './interfaces/jwt-payload.interfaces';
@@ -14,63 +18,59 @@ export class AuthUserService {
     @InjectModel(AuthUser.name)
     private readonly AuthModel: Model<AuthUser>,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async create(createAuthUserDto: CreateAuthUserDto) {
-
     try {
       const { password, ...userData } = createAuthUserDto;
 
-      const authcreate =await this.AuthModel.create({
+      const authcreate = await this.AuthModel.create({
         ...userData,
-        password: bcrypt.hashSync(password, 10)
+        password: bcrypt.hashSync(password, 10),
       });
-      delete authcreate.password
+      delete authcreate.password;
       return { authcreate };
-
     } catch (error) {
-      throw new BadRequestException(error.datail)
+      throw new BadRequestException(error.datail);
     }
   }
 
-  async login(LoginDto: LoginDto){
-    const {email, password} = LoginDto
+  async login(LoginDto: LoginDto) {
+    const { email, password } = LoginDto;
 
-    const userAuth= await this.AuthModel.findOne(
-      {email},
-      {email:1, password:1}
-    )
-    if(!userAuth) throw new UnauthorizedException(`Credential are not valid ${email}`)
+    const userAuth = await this.AuthModel.findOne(
+      { email },
+      { email: 1, password: 1 },
+    );
+    if (!userAuth)
+      throw new UnauthorizedException(`Credential are not valid ${email}`);
 
-   if(!bcrypt.compareSync(password, userAuth.password))throw new UnauthorizedException(`Crediantial are not valid ${password}`)  
+    if (!bcrypt.compareSync(password, userAuth.password))
+      throw new UnauthorizedException(`Crediantial are not valid ${password}`);
 
-   return{
-    userAuth,
-    token: this.getJwtToken({email:userAuth.email})
-   } 
-
+    return {
+      userAuth,
+      token: this.getJwtToken({ email: userAuth.email }),
+    };
   }
-
-
-
-
-
 
   async newDefaul() {
-    const password="Welcome123!";
-    const crateTodo=await this.AuthModel.create({
-      email: "admin@abatechnology.com",
-      password:bcrypt.hashSync(password, 10),
-      fullname: "Admin"
-  
-    })
+    const password = process.env.ADMIN_PASSWORD;
+    const email = process.env.ADMIN_EMAIL;
+    const name = process.env.ADMIN_FULLNAME;
+
+    const crateTodo = await this.AuthModel.create({
+      email: email,
+      password: bcrypt.hashSync(password, 10),
+      fullname: name,
+    });
     return {
-      crateTodo
-    }
-  }
-  private getJwtToken(payload: JwtPayload){
-    const token=this.jwtService.sign(payload)
-    return token
+      crateTodo,
+    };
   }
 
+  private getJwtToken(payload: JwtPayload) {
+    const token = this.jwtService.sign(payload);
+    return token;
+  }
 }

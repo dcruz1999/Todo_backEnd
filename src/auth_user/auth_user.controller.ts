@@ -18,9 +18,9 @@ export class AuthUserController {
     return this.authUserService.login(LoginDto)
   }
 
-  @Post('defaul')
+  @Post('default')
   defaul( ) {
     return this.authUserService.newDefaul();
   }
-
+  
 }
