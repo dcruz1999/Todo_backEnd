@@ -12,14 +12,14 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AuthUserController],
   providers: [AuthUserService, JwtStrategy],
   imports: [
-    ConfigModule.forRoot({ 
-      isGlobal: true 
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
     MongooseModule.forFeature([
       {
         name: AuthUser.name,
-        schema: AuthSchema
-      }
+        schema: AuthSchema,
+      },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
 
@@ -30,12 +30,12 @@ import { JwtModule } from '@nestjs/jwt';
         return {
           secret: configService.get('JWT_SECRET'),
           signOptions: {
-            expiresIn: '2h'
-          }
-        }
-      }
-    })
+            expiresIn: '2h',
+          },
+        };
+      },
+    }),
   ],
-  exports: [MongooseModule, JwtStrategy, PassportModule, JwtModule]
+  exports: [MongooseModule, JwtStrategy, PassportModule, JwtModule],
 })
-export class AuthUserModule { }
+export class AuthUserModule {}

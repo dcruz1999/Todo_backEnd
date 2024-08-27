@@ -8,14 +8,14 @@ import { AuthUserModule } from 'src/auth_user/auth_user.module';
 @Module({
   controllers: [TodoController],
   providers: [TodoService],
-  imports:[
+  imports: [
     MongooseModule.forFeature([
       {
-        name:Todo.name,
-        schema: TodoSchema
-      }
+        name: Todo.name,
+        schema: TodoSchema,
+      },
     ]),
-    AuthUserModule
-  ]
+    AuthUserModule,
+  ],
 })
 export class TodoModule {}

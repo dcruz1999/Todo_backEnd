@@ -3,6 +3,6 @@ import { CreateTodoDto } from './create-todo.dto';
 import { IsString } from 'class-validator';
 
 export class UpdateTodoDto extends PartialType(CreateTodoDto) {
-    @IsString()
-    status?: string
+  @IsString()
+  status?: string;
 }
